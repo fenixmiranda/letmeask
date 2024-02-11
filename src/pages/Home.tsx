@@ -1,18 +1,30 @@
 
+import { useNavigate } from 'react-router-dom';
+
+import { AuthContext } from '../App';
+import { useContext } from 'react';
+
 
 import illustrationImg from '../assets/images/illustration.svg';
 import logoImg from '../assets/images/logo.svg';
 import googleIconImg from '../assets/images/google-icon.svg';
 
-import '../styles/auth.scss';
-import { Button } from '../components/Button';
-import { useNavigate } from 'react-router-dom';
 
+import { Button } from '../components/Button';
+
+
+
+import '../styles/auth.scss';
 export function Home() {
     const navigate = useNavigate();
+    const { user, signInWithGoogle } = useContext(AuthContext);
+    
 
-    function navigateToNewRoom() {
-        navigate('/rooms/new');
+    async function handleCreateRoom() {
+        if (!user) {
+           await signInWithGoogle()
+        }
+        navigate('/rooms/new');        
     }
 
     return (
@@ -23,9 +35,10 @@ export function Home() {
                 <p>Tire as dúvidas da sua audiência em tempo-real</p>
             </aside>
             <main>
+                
                 <div className="main-content">
                     <img src={logoImg} alt="Letmeask" />
-                    <button onClick={navigateToNewRoom} className="create-room">
+                    <button onClick={handleCreateRoom} className="create-room">
                         <img src={googleIconImg} alt="Logo do Google" />
                         Crie sua sala com o Google
                     </button>
